@@ -2,111 +2,17 @@ package main
 
 import (
   "fmt"
-  "encoding/hex"
   "strconv"
+  "../../cryptopals"
 )
-
-func score(x string) float64 {
-  // https://en.wikipedia.org/wiki/Letter_frequency#Relative_frequencies_of_letters_in_the_English_language
-  var freqs = map[string]float64 {
-    "a": 8.167,
-    "b": 1.492,
-    "c": 2.782,
-    "d": 4.253,
-    "e": 12.702,
-    " ": 13,
-    "f": 2.228,
-    "g": 2.015,
-    "h": 6.094,
-    "i": 6.966,
-    "j": 0.153,
-    "k": 0.772,
-    "l": 4.025,
-    "m": 2.406,
-    "n": 6.749,
-    "o": 7.507,
-    "p": 1.929,
-    "q": 0.095,
-    "r": 5.987,
-    "s": 6.327,
-    "t": 9.056,
-    "u": 2.758,
-    "v": 0.978,
-    "w": 2.361,
-    "x": 0.150,
-    "y": 1.974,
-    "z": 0.074,
-    "A": 8.167,
-    "B": 1.492,
-    "C": 2.782,
-    "D": 4.253,
-    "E": 12.702,
-    "F": 2.228,
-    "G": 2.015,
-    "H": 6.094,
-    "I": 6.966,
-    "J": 0.153,
-    "K": 0.772,
-    "L": 4.025,
-    "M": 2.406,
-    "N": 6.749,
-    "O": 7.507,
-    "P": 1.929,
-    "Q": 0.095,
-    "R": 5.987,
-    "S": 6.327,
-    "T": 9.056,
-    "U": 2.758,
-    "V": 0.978,
-    "W": 2.361,
-    "X": 0.150,
-    "Y": 1.974,
-    "Z": 0.074,
-
-  }
-  var score float64 = 0;
-  for _, char := range x {
-    score += freqs[string(char)];
-  }
-  return score;
-}
-
-func cracked_xor(x string) (string, float64, float64) {
-
-  x_bytes, x_err := hex.DecodeString(x);
-
-  if x_err != nil {
-    fmt.Println(x_err);
-  }
-
-  dst := x_bytes;
-  var top_score float64 = 0;
-  var distance float64 = 0;
-  winner := string(dst[:]);
-  for i := 0; i < 255; i++ {
-    key := byte(i);
-
-    for i := 0; i < len(x_bytes); i++ {
-      dst[i] = x_bytes[i] ^ key;
-    }
-
-    score := score(string(dst[:]));
-    if score > top_score {
-      distance = score - top_score;
-      top_score = score;
-      winner = string(dst[:]);
-    }
-  }
-
-  return winner, top_score, distance;
-}
 
 func main() {
   input    := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
 
-  winner, top_score, distance := cracked_xor(input);
-  fmt.Println("Given   : " + input);
-  fmt.Println("Got     : " + winner);
-  fmt.Println("          With a top score of "  + strconv.FormatFloat(top_score, 'f', 2, 64) +
-              " and a lead of " + strconv.FormatFloat(distance, 'f', 2, 64));
+  winner, top_score, distance, key := cryptopals.CrackSingleXor(input);
+  fmt.Println("Given  : " + input);
+  fmt.Println("Winner : " + winner);
+  fmt.Println("Score  : " + strconv.FormatFloat(top_score, 'f', 2, 64));
+  fmt.Println("Lead   : " + strconv.FormatFloat(distance, 'f', 2, 64));
+  fmt.Println("Key    : " + string(key));
 }
