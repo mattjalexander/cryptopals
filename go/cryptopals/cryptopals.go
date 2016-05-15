@@ -62,12 +62,13 @@ func score(x string) float64 {
     "X": 0.150,
     "Y": 1.974,
     "Z": 0.074,
-
   }
+
   var score float64 = 0;
   for _, char := range x {
-    score += freqs[string(char)];
+    score += freqs[string(char)]
   }
+
   return score;
 }
 
