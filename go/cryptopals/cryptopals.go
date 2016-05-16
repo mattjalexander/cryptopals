@@ -75,7 +75,7 @@ func score(x string) float64 {
 // XORs a hex encoded String with all single characters (0-255), and returns
 // the string most likely to be english, and as well it's total score
 // and distance from best compititor.
-// This is Challenge 3.
+// This is Challenge 3 & 4.
 func CrackSingleXor(x string) (string, float64, float64, byte) {
   x_bytes, x_err := hex.DecodeString(x);
 
@@ -105,4 +105,17 @@ func CrackSingleXor(x string) (string, float64, float64, byte) {
   }
 
   return winner, top_score, distance, winning_key;
+}
+
+// Encrypts a given plaintext (line by line) with a repeating XOR.
+// This is Challenge 5
+func EncryptRepeatingXor(plaintext string, key string) (string) {
+  keybytes := []byte(key)
+  plainbytes := []byte(plaintext)
+  cipherbytes := plainbytes
+
+  for i := 0; i < len(plainbytes); i++ {
+    cipherbytes[i] = plainbytes[i] ^ keybytes[i%len(keybytes)]
+  }
+  return hex.EncodeToString(cipherbytes)
 }
